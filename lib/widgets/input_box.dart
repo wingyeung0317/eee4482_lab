@@ -4,12 +4,14 @@ class InputBox extends StatefulWidget {
   final String name;
   final String hint;
   final TextEditingController controller;
+  final String? Function(String?)? validator;
   final bool obscureText;
   InputBox(
       {super.key,
       required this.name,
       required this.hint,
       required this.controller,
+      this.validator,
       this.obscureText = false});
   @override
   State<InputBox> createState() => _InputBoxState();
@@ -38,6 +40,7 @@ class _InputBoxState extends State<InputBox> {
                 border: OutlineInputBorder(),
                 labelText: widget.hint,
               ),
+              validator: widget.validator,
             )),
       ],
     );

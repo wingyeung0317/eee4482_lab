@@ -1,19 +1,22 @@
-name: eee4482_lab
-description: "A new Flutter project."
+name: eee4482_elibrary
+description: A new Flutter project.
 publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.5.4
+  sdk: '>=3.0.5 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.1.0
+  shelf_proxy: ^1.0.4
+  validators: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
