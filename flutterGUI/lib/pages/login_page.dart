@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/input_box.dart';
 import '../cookie.dart';
+import '../api.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -110,10 +111,12 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() async {
     String message = 'Failed to login your account';
-    if (true) {
+
+    if (await apiLogin(_usernameController.text, _passwordController.text)) {
       message = 'Successfully login to your account.';
       Navigator.of(context).pushNamed("/home");
     }
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );

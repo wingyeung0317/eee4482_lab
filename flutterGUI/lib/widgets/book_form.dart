@@ -117,6 +117,7 @@ class _BookFormState extends State<BookForm> {
     String message = 'Failed to submit the book record.';
     if (result == true) {
       message = 'The record has been successfully submitted.';
+      Navigator.of(context).pushNamed("/booklist");
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
@@ -134,6 +135,7 @@ class _BookFormState extends State<BookForm> {
     String message = 'Failed to update the book record.';
     if (result == true) {
       message = 'The record has been successfully updated.';
+      Navigator.of(context).pushNamed("/booklist");
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
