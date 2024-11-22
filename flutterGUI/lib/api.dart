@@ -105,3 +105,45 @@ Future<bool> apiDeleteBook(int bookId) async {
     return false;
   }
 }
+
+Future<bool> apiLogin(String username, String password) async { 
+  var client = getCredentialsClient(); 
+  final response = await client.post( 
+    Uri.parse(API_ENDPOINT + '/api/users/login'), 
+    headers: <String, String>{ 
+      'Content-Type': 'application/json; charset=UTF-8', 
+    }, 
+    body: jsonEncode( 
+        <String, String>{'username': username, 'password': password}), 
+  ); 
+  client.close(); 
+  // print(response.body); //debug 
+  if (response.statusCode == 200) { 
+    var jsonResponse = jsonDecode(response.body); 
+    if (jsonResponse != false) { 
+      return true; 
+    } else { 
+      return false; 
+    } 
+  } else { 
+    return false; 
+  } 
+} 
+ 
+Future<bool> apiLogout() async { 
+  var client = getCredentialsClient(); 
+  final response = 
+      await client.get(Uri.parse(API_ENDPOINT + '/api/users/logout')); 
+  client.close(); 
+  // print(response.body); //debug 
+  if (response.statusCode == 200) { 
+    var jsonResponse = jsonDecode(response.body); 
+    if (jsonResponse != false) { 
+      return true; 
+    } else { 
+      return false; 
+    } 
+  } else { 
+    return false; 
+  } 
+} 
