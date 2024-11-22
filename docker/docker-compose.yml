@@ -8,8 +8,6 @@ services:
         ROOT_PASSWORD: ${ROOT_PASSWORD}
     ports:
       - "80:80"
-    volumes:
-      - ./php/:/var/www/html
     depends_on:
       - db
     environment:
@@ -27,19 +25,6 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      PMA_ABSOLUTE_URI: http://localhost/phpmyadmin
-      PMA_AUTH_TYPE: http
-    ports:
-      - "8080:80"
-    depends_on:
-      - db
 
 volumes:
   db_data:
