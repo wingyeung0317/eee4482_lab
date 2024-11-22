@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../api.dart';
 
 class NavigationFrame extends StatefulWidget {
   Widget child;
@@ -10,6 +11,10 @@ class NavigationFrame extends StatefulWidget {
 }
 
 class _NavigationFrameState extends State<NavigationFrame> {
+  Future<void> logout() async {
+    apiLogout();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +35,14 @@ class _NavigationFrameState extends State<NavigationFrame> {
                 break;
               case 2:
                 Navigator.of(context).pushNamed("/booklist");
+                break;
+              case 3:
+                Navigator.of(context).pushNamed("/myrecords");
+                break;
+              case 4:
+                logout();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/', (Route<dynamic> route) => false);
                 break;
               default:
                 Navigator.of(context).pushNamed("/");
@@ -52,6 +65,11 @@ class _NavigationFrameState extends State<NavigationFrame> {
             icon: Icon(Icons.library_books_outlined),
             selectedIcon: Icon(Icons.library_books),
             label: Text('Book List'),
+          ),
+          NavigationRailDestination(
+            icon: Icon(Icons.book_outlined),
+            selectedIcon: Icon(Icons.book),
+            label: Text('My Records'),
           ),
           NavigationRailDestination(
             icon: Icon(Icons.logout_outlined),

@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io; // flutter pub add shelf_proxy
 import 'package:shelf_proxy/shelf_proxy.dart'; // flutter pub add shelf_proxy
 
-final String targetUrl = 'http://192.168.1.111'; // your API server address
+final String targetUrl = 'http://localhost/'; // your API server address
 void configServer(HttpServer server) {
 //add neccessary properties to the response header
   server.defaultResponseHeaders
@@ -18,7 +18,7 @@ void configServer(HttpServer server) {
 
 void main() async {
   var reqHandle = proxyHandler(targetUrl);
-  var server = await shelf_io.serve(reqHandle, 'localhost', 4500);
+  var server = await shelf_io.serve(reqHandle, 'localhost', 8081);
   configServer(server);
   print('Api Serving at http://${server.address.host}:${server.port}');
 }

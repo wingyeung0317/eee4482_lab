@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/book_form.dart';
 import '../widgets/navigation_frame.dart';
 import '../api.dart';
+import '../cookie.dart';
 
 class BooklistPage extends StatefulWidget {
   List<Map<String, dynamic>> booklist = [
@@ -70,6 +71,8 @@ class _BooklistPageState extends State<BooklistPage> {
   }
 
   Widget createSingleBookRecord(Map<String, dynamic> book) {
+    Map<String, String> cookieMap = getCookie();
+    int is_admin = int.parse(cookieMap['is_admin']!);
     return Card(
       child: ListTile(
         enabled: int.parse(book["status"]) == 0 ? true : false, //check status
@@ -86,20 +89,23 @@ class _BooklistPageState extends State<BooklistPage> {
             book["date"] +
             "\nISBN: " +
             book["isbn"]),
-        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              if (int.parse(book["status"]) == 0) popupUpdateDialog(book);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              if (int.parse(book["status"]) == 0) popupDeletewDialog(book);
-            },
-          ),
-        ]),
+        trailing: is_admin == 1
+            ? Row(mainAxisSize: MainAxisSize.min, children: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    if (int.parse(book["status"]) == 0) popupUpdateDialog(book);
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    if (int.parse(book["status"]) == 0)
+                      popupDeletewDialog(book);
+                  },
+                ),
+              ])
+            : Container(width: 50),
       ),
     );
   }
@@ -138,10 +144,7 @@ class _BooklistPageState extends State<BooklistPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text("Borrowed " + book["title"] + ".")),
-                    );
+                    borrowBook(int.parse(book["book_id"]));
                     Navigator.pop(context, 'Yes');
                   },
                   child: const Text('Yes'),
@@ -191,6 +194,17 @@ class _BooklistPageState extends State<BooklistPage> {
     String message = "Failed to delete the book.";
     if (await apiDeleteBook(bookId) == true) {
       message = "The book has been deleted successfully.";
+      Navigator.of(context).pushNamed("/booklist");
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  Future<void> borrowBook(int bookId) async {
+    String message = "Failed to borrow the book.";
+    if (await apiBorrowBook(bookId) == true) {
+      message = "The book has been borrowed successfully.";
       Navigator.of(context).pushNamed("/booklist");
     }
     ScaffoldMessenger.of(context).showSnackBar(
