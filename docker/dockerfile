@@ -30,6 +30,8 @@ RUN wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.ta
     && rm phpMyAdmin-latest-all-languages.tar.gz \
     && mv phpMyAdmin-*-all-languages /usr/share/phpmyadmin
 
+COPY ./config.inc.php /usr/share/phpmyadmin/config.inc.php
+
     # 配置 Apache 允許所有網路訪問並使用 HTTP 認證
 RUN echo '<Directory /usr/share/phpmyadmin>\n\
     Options Indexes FollowSymLinks\n\
