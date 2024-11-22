@@ -1,5 +1,4 @@
 <?php
-
 use Slim\Routing\RouteContext;
 use Psr\Http\Message\ResponseInterface;
 
@@ -44,6 +43,4 @@ $checkLoggedInMiddleware = function($request, $handler): ResponseInterface {
         return $response;
     }
 };
-    
-
 ?>
