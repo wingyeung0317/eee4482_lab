@@ -6,7 +6,6 @@ $app = Slim\Factory\AppFactory::create();
 
 // add simple authentication
 require_once __DIR__ . '/../src/auth.php';
-$app->add($checkLoggedInMiddleware);
 
 //handle json format
 $app->addBodyParsingMiddleware();
@@ -37,6 +36,7 @@ $app->post('/books/add', 'App\Services\AddBook');
 $app->put('/books/update/{book_id}', 'App\Services\UpdateBook');
 $app->delete('/books/delete/{book_id}', 'App\Services\DeleteBook');
 $app->post('/users/login', 'App\Services\Login')->setName('login');
+$app->post('/users/register', 'App\Services\Register');
 $app->get('/users/logout', 'App\Services\Logout');
 $app->get('/users/myrecords', 'App\Services\MyRecords');
 $app->get('/books/borrow/{book_id}','App\Services\BorrowBook');
