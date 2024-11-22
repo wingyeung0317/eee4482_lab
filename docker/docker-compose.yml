@@ -1,22 +1,45 @@
-version: '3'
+version: '3.8'
 
 services:
- db:
-  image: mysql
-  environment:
-   MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-   MYSQL_DATABASE: elibrary
-   MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-  ports:
-    - "3306:3306"
- api:
-  image: php
-  volumes:
-   - ./php/:/var/www/html
-  ports:
-    - "80:80"
-  depends_on:
-    - db
-  stdin_open: true
-  tty: true
-  
+  php_api:
+    build:
+      context: .
+      args:
+        ROOT_PASSWORD: ${ROOT_PASSWORD}
+    ports:
+      - "80:80"
+    volumes:
+      - ./php/:/var/www/html
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: ${MYSQL_ROOT_PASSWORD}
+      DB_NAME: elibrary
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: elibrary
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_ABSOLUTE_URI: http://localhost/phpmyadmin
+      PMA_AUTH_TYPE: http
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
