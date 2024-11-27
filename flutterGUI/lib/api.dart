@@ -133,6 +133,32 @@ Future<bool> apiLogin(String username, String password) async {
   }
 }
 
+Future<bool> apiRegister(String username, String password, String repeatedPassword) async {
+  var client = getCredentialsClient();
+  final response = await client.post(
+    Uri.parse(API_ENDPOINT + '/api/users/register'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'username': username,
+      'password': password,
+      'repeated_password': repeatedPassword
+    }),
+  );
+  client.close();
+  if (response.statusCode == 200) {
+    var jsonResponse = jsonDecode(response.body);
+      if (jsonResponse != false) {
+        return true;
+      } else {
+        return false;
+      }
+  } else {
+    return false;
+  }
+}
+
 Future<bool> apiLogout() async {
   var client = getCredentialsClient();
   final response =

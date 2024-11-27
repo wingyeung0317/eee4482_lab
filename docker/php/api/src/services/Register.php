@@ -28,7 +28,7 @@ function Register($request, $response) {
 
         // our SQL statements 
         $sql = "INSERT INTO users (username, password) 
-                VALUES ('$username', '$passowrd')";
+                VALUES ('$username', '$password')";
         $conn->exec($sql);
 
         // commit the transaction 

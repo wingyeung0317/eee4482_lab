@@ -19,7 +19,6 @@ $app->addRoutingMiddleware();
 $app->add(new Selective\BasePath\BasePathMiddleware($app));
 
 $app->addErrorMiddleware(true, true, true);
-// Define app routes here
 
 // Define app routes here
 $app->get('/', function ($request, $response) {
@@ -32,12 +31,17 @@ foreach (glob(__DIR__ . '/../src/services/*.php') as $filename) {
 // var_dump($filename); // for debug only
 require_once($filename); 
 }
+
 $app->get('/books/all', 'App\Services\GetAllBooks');
 $app->post('/books/add', 'App\Services\AddBook');
 $app->put('/books/update/{book_id}', 'App\Services\UpdateBook');
 $app->delete('/books/delete/{book_id}', 'App\Services\DeleteBook');
 $app->post('/users/login', 'App\Services\Login')->setName('login');
+$app->post('/users/register', 'App\Services\Register')->setName('register');
 $app->get('/users/logout', 'App\Services\Logout');
+$app->get('/users/myrecords', 'App\Services\MyRecords');
+$app->get('/books/borrow/{book_id}','App\Services\BorrowBook');
+$app->get('/books/return/{book_id}', 'App\Services\ReturnBook');
 
 // Run app
 $app->run();
