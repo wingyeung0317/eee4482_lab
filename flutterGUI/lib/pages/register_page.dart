@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
 import '../widgets/input_box.dart';
-import '../cookie.dart';
 import '../api.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool isRememberMeChecked = false; // store the state of checkbox
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-            child: Container(
-                width: 600,
-                height: 500,
-                child: Form(key: _formKey, child: _buildWidgets(context)))));
-  }
+  final TextEditingController _repeatedPasswordController = TextEditingController();
 
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) return 'Username cannot be empty.';
@@ -34,24 +24,27 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  Widget _buildWidgets(BuildContext context) {
-    try {
-      final cookieMap = getCookie();
-      int remember = cookieMap.containsKey("remember")
-          ? int.parse(cookieMap["remember"]!)
-          : 0;
-      if (remember > 0) {
-        _usernameController.text = cookieMap["remember_username"]!;
-        _passwordController.text = cookieMap["remember_password"]!;
-      }
-    } catch (e) {
-      print(e);
-    }
+  String? _validateRepeatedPassword(String? value) {
+    if (value == null || value.isEmpty) return 'Repeated password cannot be empty.';
+    if (value != _passwordController.text) return 'Passwords do not match.';
+    return null;
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+            child: Container(
+                width: 600,
+                height: 600,
+                child: Form(key: _formKey, child: _buildWidgets(context)))));
+  }
+
+  Widget _buildWidgets(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
         margin: EdgeInsets.only(left: 20, top: 40, bottom: 10, right: 20),
-        child: Text("Login",
+        child: Text("Register",
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
@@ -70,20 +63,12 @@ class _LoginPageState extends State<LoginPage> {
         validator: _validatePassword,
         obscureText: true,
       ),
-      Container(
-        margin: EdgeInsets.only(left: 20, top: 0, bottom: 0, right: 20),
-        alignment: Alignment.centerLeft,
-        child: Row(children: [
-          Checkbox(
-              value: isRememberMeChecked,
-              onChanged: (bool? value) {
-                setState(() {
-                  isRememberMeChecked = value!;
-                });
-              }),
-          Text("Remember me",
-              style: TextStyle(fontSize: 12, color: Colors.grey)),
-        ]),
+      InputBox(
+        name: "Repeat Password",
+        hint: "Enter the same password",
+        controller: _repeatedPasswordController,
+        validator: _validateRepeatedPassword,
+        obscureText: true,
       ),
       Container(
           margin: EdgeInsets.only(left: 20, top: 10, bottom: 10, right: 20),
@@ -94,17 +79,10 @@ class _LoginPageState extends State<LoginPage> {
                 textStyle: const TextStyle(fontSize: 14)),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                if (isRememberMeChecked) {
-                  setCookie("remember", "1");
-                  setCookie("remember_username", _usernameController.text);
-                  setCookie("remember_password", _passwordController.text);
-                } else {
-                  setCookie("remember", "0");
-                }
-                login();
+                register();
               }
             },
-            child: const Text('Login'),
+            child: const Text('Register'),
           )),
       Container(
           margin: EdgeInsets.only(left: 20, top: 10, bottom: 10, right: 20),
@@ -114,19 +92,19 @@ class _LoginPageState extends State<LoginPage> {
                 minimumSize: const Size.fromHeight(50),
                 textStyle: const TextStyle(fontSize: 14)),
             onPressed: () {
-              Navigator.of(context).pushNamed("/register");
+              Navigator.of(context).pushNamed("/login");
             },
-            child: const Text('Register'),
+            child: const Text('Back to Login'),
           )),
     ]);
   }
 
-  void login() async {
-    String message = 'Failed to login your account';
+  void register() async {
+    String message = 'Failed to register your account';
 
-    if (await apiLogin(_usernameController.text, _passwordController.text)) {
-      message = 'Successfully login to your account.';
-      Navigator.of(context).pushNamed("/home");
+    if (await apiRegister(_usernameController.text, _passwordController.text, _repeatedPasswordController.text)) {
+      message = 'Successfully registered your account.';
+      Navigator.of(context).pushNamed("/login");
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
