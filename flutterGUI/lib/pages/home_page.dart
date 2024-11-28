@@ -1,3 +1,4 @@
+import 'package:eee4482_elibrary/cookie.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_frame.dart';
 
@@ -8,7 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var username = "User";
+  var username = getCookie()['logged_in_user'] ?? "User";
   @override
   Widget build(BuildContext context) {
     return NavigationFrame(

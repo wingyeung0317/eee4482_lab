@@ -18,6 +18,14 @@ class InputBox extends StatefulWidget {
 }
 
 class _InputBoxState extends State<InputBox> {
+  bool _obscureText = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.obscureText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,13 +42,26 @@ class _InputBoxState extends State<InputBox> {
             margin: EdgeInsets.only(left: 20, top: 0, bottom: 10, right: 20),
             alignment: Alignment.centerLeft,
             child: TextFormField(
-              obscureText: widget.obscureText,
+              obscureText: _obscureText,
               controller: widget.controller,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: widget.hint,
+                suffixIcon: widget.obscureText
+                    ? IconButton(
+                        icon: Icon(
+                          _obscureText ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      )
+                    : null,
               ),
               validator: widget.validator,
+              obscuringCharacter: '*',
             )),
       ],
     );
