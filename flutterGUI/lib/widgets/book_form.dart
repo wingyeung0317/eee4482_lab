@@ -75,8 +75,8 @@ class _BookFormState extends State<BookForm> {
             validator: _validatePublishers,
           ),
           InputBox(
-            name: "Date",
-            hint: "e.g. 26 June 1997",
+            name: "Date (YYYY-MM-DD)",
+            hint: "e.g. 1997-06-26",
             controller: _dateController,
             validator: _validateDate,
           ),
