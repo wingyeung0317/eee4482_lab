@@ -126,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (await apiLogin(_usernameController.text, _passwordController.text)) {
       message = 'Successfully login to your account.';
+      setCookie("logged_in_user", _usernameController.text); // 設置登錄用戶名到 cookies
       Navigator.of(context).pushNamed("/home");
     }
 
